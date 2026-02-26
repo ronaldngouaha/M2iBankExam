@@ -23,6 +23,9 @@ public class DebitServiceImpl implements DebitService {
     public void doOperation(Debit debit) {
 
         Account account= debit.getAccount();
+
+        System.out.println(String.format("Current thread: %s  try to debit account: %s , amount: %.2f", Thread.currentThread().getName(), account.getAccountNumber(), debit.getAmount()));
+
         try {
             validationService.lockAccount(account, ()->{
                 // Validate account status
@@ -37,7 +40,8 @@ public class DebitServiceImpl implements DebitService {
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                     }
-                    System.out.println("Account is blocked. Operation failed.");
+                    System.out.println(String.format("Current thread: %s  failed to debit account: %s , amount: %.2f", Thread.currentThread().getName(), account.getAccountNumber(), debit.getAmount()));
+
                     return;
                 }
                 BigDecimal balance = blockchainService.computeBalance(account);
@@ -54,7 +58,8 @@ public class DebitServiceImpl implements DebitService {
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                     }
-                    System.out.println("Insufficient balance. Operation failed.");
+                    System.out.println(String.format("Current thread: %s  fail to debit account: %s , amount: %.2f", Thread.currentThread().getName(), account.getAccountNumber(), debit.getAmount()));
+
                     return;
                 }
                 debit.setStatus(TransactionStatus.SUCCESS);
@@ -68,6 +73,7 @@ public class DebitServiceImpl implements DebitService {
                 }
 
                 System.out.println("Debit operation successful and recorded in the blockchain.");
+                System.out.println(String.format("Current thread: %s  successfully to debit account: %s , amount: %.2f", Thread.currentThread().getName(), account.getAccountNumber(), debit.getAmount()));
 
             });
         } catch (InterruptedException e) {

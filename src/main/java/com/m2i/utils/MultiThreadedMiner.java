@@ -54,6 +54,8 @@ public class MultiThreadedMiner {
                     if (hash.startsWith(target)) {
                         found.set(true);
                         resultFuture.complete(new MiningResult(hash, nonce));
+                        System.out.println(" Thread "+Thread.currentThread().getName()+" as found token "+hash);
+
                         return;
                     }
 

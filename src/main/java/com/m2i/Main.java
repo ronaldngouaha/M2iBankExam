@@ -74,11 +74,11 @@ public class Main
         service.scheduleWithFixedDelay(()->{
             System.out.println("==========================================================================");
             System.out.println("BALANCE OF "+account.getClient().getClientName()+" is "+blockchainService.computeBalance(account));
-            System.out.println("Account status is look? "+account.getLock().isLocked());
-            System.out.println("Blockchain status is WriteLook? "+blockchainService.getBlockchain().getLock().isWriteLocked());
+            System.out.println("Account status is locked? "+account.getLock().isLocked());
+            System.out.println("Blockchain status is WriteLocked? "+blockchainService.getBlockchain().getLock().isWriteLocked());
             System.out.println("==========================================================================");
 
-        },1, 1, TimeUnit.SECONDS);
+        },1, 500, TimeUnit.MILLISECONDS);
 
         MiniStatement miniStatement= new MiniStatement(account,2);
         MiniStatementServiceImpl miniStatementService= new MiniStatementServiceImpl(blockchainService);
@@ -107,8 +107,8 @@ public class Main
         }, 8, TimeUnit.SECONDS);
 
 
-        service.schedule(executorService::shutdown,10, TimeUnit.SECONDS);
-        service.schedule(service::shutdown,10, TimeUnit.SECONDS);
+        service.schedule(executorService::shutdown,30, TimeUnit.SECONDS);
+        service.schedule(service::shutdown,30, TimeUnit.SECONDS);
 
 
     }

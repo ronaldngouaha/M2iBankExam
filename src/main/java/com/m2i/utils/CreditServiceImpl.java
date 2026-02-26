@@ -25,6 +25,9 @@ public class CreditServiceImpl implements CreditService {
     public void doOperation(Credit credit) {
 
         Account account=credit.getAccount();
+
+        System.out.println(String.format("Current thread: %s  try to credit account: %s , amount: %.2f", Thread.currentThread().getName(), account.getAccountNumber(), credit.getAmount()));
+
         try {
             validationService.lockAccount(account, ()->{
 
@@ -39,7 +42,8 @@ public class CreditServiceImpl implements CreditService {
                             } catch (InterruptedException e) {
                                 Thread.currentThread().interrupt();
                             }
-                            System.out.println("Credit operation failed: Account is blocked for account: " + account.getAccountNumber());
+                            System.out.println(String.format("Current thread: %s  failed to credit account: %s , amount: %.2f", Thread.currentThread().getName(), account.getAccountNumber(), credit.getAmount()));
+
                             return;
                         }
 
@@ -52,7 +56,8 @@ public class CreditServiceImpl implements CreditService {
                                 } catch (InterruptedException e) {
                                     Thread.currentThread().interrupt();
                                 }
-                        System.out.println("Credit operation successful for account: " + account.getAccountNumber() + " Amount: " + credit.getAmount());
+
+                System.out.println(String.format("Current thread: %s  successfully credit account: %s , amount: %.2f", Thread.currentThread().getName(), account.getAccountNumber(), credit.getAmount()));
 
                     });
                 } catch (InterruptedException e) {
