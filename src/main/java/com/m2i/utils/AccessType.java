@@ -1,4 +1,5 @@
 package com.m2i.utils;
 
-public interface AccessType {
+public enum AccessType {
+    READ, WRITE
 }

@@ -7,6 +7,9 @@
   <groupId>com.m2i</groupId>
   <artifactId>M2iBankExam</artifactId>
   <version>1.0-SNAPSHOT</version>
+  <properties>
+    <gpg.skip>true</gpg.skip>
+  </properties>
 
   <parent>
     <groupId>at.stderr</groupId>
@@ -46,6 +49,14 @@
           <mainClass>com.m2i.Main</mainClass>
         </configuration>
       </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+                <source>25</source>
+                <target>25</target>
+            </configuration>
+        </plugin>
     </plugins>
   </build>
 

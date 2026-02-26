@@ -5,32 +5,32 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public final class Transaction  extends BaseTransactionModel{
-    public static final String ONLY_PENDING_TRANSACTIONS_CAN_BE_CANCELLED = "Only pending transactions can be cancelled";
+public sealed abstract class Operation extends BaseTransactionModel permits Debit, Credit, Transfer ,Refund{
+
     public static final String DESCRIPTION = "description";
     public static final String STATUS = "status";
     public static final String CLIENT = "client";
     public static final String AMOUNT = "amount";
     public static final String TYPE = "type";
     public static final String RECEIVER = "receiver";
-    private final String transactionId;
+    private final String operationId;
     private final BigDecimal amount;
-    private final Account client;
-    private Account receiver;
+    private final Account account;
+
     private final TransactionType type;
     private TransactionStatus status;
     private String description;
     private final LocalDateTime transactionDate;
 
 
-    public Transaction(Account client, BigDecimal amount, TransactionType type, String description) {
+     public Operation(Account account, BigDecimal amount, TransactionType type, String description) {
 
-       checkAttribute(CLIENT, client);
-       checkAttribute(AMOUNT, amount);
-       checkAttribute(TYPE, type);
+        checkAttribute(CLIENT, account);
+        checkAttribute(AMOUNT, amount);
+        checkAttribute(TYPE, type);
 
-        this.client=client;
-        this.transactionId = UUID.randomUUID().toString();
+        this.account=account;
+        this.operationId = UUID.randomUUID().toString();
         this.amount = amount;
         this.type = type;
         this.status = TransactionStatus.PENDING;
@@ -39,15 +39,13 @@ public final class Transaction  extends BaseTransactionModel{
 
     }
 
-    public Transaction(Account sender, Account receiver, BigDecimal amount, TransactionType type, String description) {
-        this(sender, amount, type, description);
-        checkAttribute(RECEIVER, receiver);
-        this.receiver=receiver;
+
+    public Account getAccount() {
+        return account;
     }
 
-
-    public String getTransactionId() {
-        return transactionId;
+    public String getOperationId() {
+        return operationId;
     }
 
     public BigDecimal getAmount() {
@@ -79,46 +77,34 @@ public final class Transaction  extends BaseTransactionModel{
     public LocalDateTime getTransactionDate() {
         return transactionDate;
     }
-        public Account getClient() {
-            return client;
+
+        public void displayOperationDetails() {
+            System.out.println("Operation ID: " + operationId);
+            System.out.println("Client: " + account.getClient().getClientName());
+            System.out.println("Amount: " + amount);
+            System.out.println("Type: " + type);
+            System.out.println("Status: " + status);
+            System.out.println("Description: " + description);
+            System.out.println("Date: " + transactionDate);
         }
 
-    public Account getReceiver() {
-        return receiver;
-    }
+        @Override
+        public String toString() {
+            return "Operation{" +
+                    "operationId='" + operationId + '\'' +
+                    ", amount=" + amount +
+                    ", account=" + account +
+                    ", type=" + type +
+                    ", status=" + status +
+                    ", description='" + description + '\'' +
+                    ", transactionDate=" + transactionDate +
+                    '}';
+        }
 
-    // Permet de marquer une transaction comme "COMPLETED", en vérifiant que son statut est actuellement "PENDING" avant de le faire.
-    public void completeTransaction() {
-        if (status != TransactionStatus.PENDING) {
-            throw new IllegalStateException(ONLY_PENDING_TRANSACTIONS_CAN_BE_CANCELLED  );
-        }
-        setStatus(TransactionStatus.COMPLETED);
-    }
-    // Permet d'annuler une transaction en cours, en vérifiant que son statut est "PENDING" ou "COMPLETED" avant de la marquer comme "CANCELLED".
-    public void cancelTransaction() {
-        if (status != TransactionStatus.PENDING && status != TransactionStatus.COMPLETED) {
-            throw new IllegalStateException(ONLY_PENDING_TRANSACTIONS_CAN_BE_CANCELLED + ".");
-        }
-        setStatus(TransactionStatus.CANCELLED);
-    }
 
 }
 
 
 
- enum TransactionStatus {
-    PENDING,
-    COMPLETED,
-    CANCELLED
-}
 
- enum TransactionType {
-    CREDIT,
-    DEBIT,
-    TRANSFER,
-    PAYMENT,
-    WITHDRAWAL,
-    DEPOSIT,
-    REFUND,
-    REVERSAL
-}
+

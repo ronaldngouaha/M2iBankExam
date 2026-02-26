@@ -1,11 +1,11 @@
 package com.m2i.model.client;
 
-import com.m2i.exception.IllegalAddressArgumentException;
+import com.m2i.exception.IllegalParameterArgumentException;
 
 import java.math.BigDecimal;
 import java.util.regex.Pattern;
 
-public sealed abstract class BaseModel permits Address, Client {
+public sealed abstract class BaseClientModel permits Address, Client {
 
     private static final Pattern EMAIL_PATTERN = Pattern.compile(
             "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$",
@@ -22,22 +22,22 @@ public sealed abstract class BaseModel permits Address, Client {
 
     protected void checkAttribute(String parameterName, String parameterValue){
         if(parameterValue == null || parameterValue.isBlank() ){
-            throw IllegalAddressArgumentException.forNullOrBlank(parameterName);
+            throw IllegalParameterArgumentException.forNullOrBlank(parameterName);
         }
     }
     protected void checkAttribute(String parameterName, Integer parameterValue){
         if(parameterValue == null || parameterValue<=0 ){
-            throw IllegalAddressArgumentException.forInvalid(parameterName, INVALID_NUMBER_WARNING);
+            throw IllegalParameterArgumentException.forInvalid(parameterName, INVALID_NUMBER_WARNING);
         }
     }
     protected void checkAttribute(String parameterName, BigDecimal parameterValue){
         if(parameterValue == null || parameterValue.compareTo(BigDecimal.ZERO) <= 0 ){
-            throw IllegalAddressArgumentException.forInvalid(parameterName, INVALID_NUMBER_WARNING);
+            throw IllegalParameterArgumentException.forInvalid(parameterName, INVALID_NUMBER_WARNING);
         }
     }
     protected void checkAttribute(String parameterName, Object parameterValue){
         if(parameterValue == null  ){
-            throw IllegalAddressArgumentException.forNullOrBlank(parameterName);
+            throw IllegalParameterArgumentException.forNullOrBlank(parameterName);
         }
     }
 
@@ -46,14 +46,14 @@ public sealed abstract class BaseModel permits Address, Client {
      * Réutilise la validation de base (null/blank) puis vérifie le pattern.
      * @param parameterName le nom du paramètre (utilisé dans l'exception)
      * @param email la valeur de l'email à valider
-     * @throws IllegalAddressArgumentException si l'email est null, vide ou mal formé
+     * @throws IllegalParameterArgumentException si l'email est null, vide ou mal formé
      */
     protected void checkEmailAttribute(String parameterName, String email) {
         // vérifie null/blank via la méthode existante
         checkAttribute(parameterName, email);
         // vérifie le format
         if (!EMAIL_PATTERN.matcher(email).matches()) {
-            throw IllegalAddressArgumentException.forInvalid(parameterName, INVALID_EMAIL_WARNING);
+            throw IllegalParameterArgumentException.forInvalid(parameterName, INVALID_EMAIL_WARNING);
         }
     }
 
@@ -68,12 +68,12 @@ public sealed abstract class BaseModel permits Address, Client {
         checkAttribute(parameterName, phone);
         // caractères autorisés
         if (!PHONE_ALLOWED_PATTERN.matcher(phone).matches()) {
-            throw IllegalAddressArgumentException.forInvalid(parameterName, INVALID_CHARACTERS_WARNING);
+            throw IllegalParameterArgumentException.forInvalid(parameterName, INVALID_CHARACTERS_WARNING);
         }
         // compter les chiffres uniquement
         String digits = phone.replaceAll("\\D", "");
         if (digits.length() < MIN_PHONE_DIGITS || digits.length() > MAX_PHONE_DIGITS) {
-            throw IllegalAddressArgumentException.forInvalid(parameterName, INVALID_DIGITS_WARNING + " " +MIN_PHONE_DIGITS+" and  "+MAX_PHONE_DIGITS);
+            throw IllegalParameterArgumentException.forInvalid(parameterName, INVALID_DIGITS_WARNING + " " +MIN_PHONE_DIGITS+" and  "+MAX_PHONE_DIGITS);
         }
     }
 

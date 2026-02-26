@@ -7,12 +7,12 @@ import com.m2i.service.RefundService;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class RefundCreditServiceImpl implements RefundService {
+public class RefundDeditServiceImpl implements RefundService {
 
 
     private BlockchainServiceImpl blockchainService;
     private AccountValidationServiceImpl validationService;
-    public RefundCreditServiceImpl (BlockchainServiceImpl blockchainService, AccountValidationServiceImpl validationService) {
+    public RefundDeditServiceImpl(BlockchainServiceImpl blockchainService, AccountValidationServiceImpl validationService) {
         this.blockchainService = blockchainService;
         this.validationService= validationService;
 
@@ -20,31 +20,52 @@ public class RefundCreditServiceImpl implements RefundService {
 
 
     @Override
-    public void doOperation(Refund refund, List<Operation> blockchainBlocks) {
+    public void doOperation(Refund refund) {
 
-        if(! (refund instanceof RefundCredit rc)){
-            throw new IllegalArgumentException("Refund must be of type RefundCredit");
+        if(! (refund instanceof RefundDebit rc)){
+            throw new IllegalArgumentException("Refund must be of type RefundDebit");
         }
 
         // Validation de l'opération de remboursement
         Account account= refund.getAccount();
-        if(!validationService.canOperate(account)){
-            rc.setStatus(TransactionStatus.FAILED);
-            blockchainService.recordOperation(rc);
-        }
-        BigDecimal balance = blockchainService.computeBalance(account);
-        if (!validationService.hasSufficientBalance(balance, rc.getAmount())) {
-            rc.setStatus(TransactionStatus.FAILED);
-            blockchainService.recordOperation(rc);
-            return;
+
+        try {
+            validationService.lockAccount(account, ()->{
+
+                if(!validationService.canOperate(account)){
+                    rc.setStatus(TransactionStatus.FAILED);
+                    rc.setDescription("Account is blocked");
+                    try {
+                        blockchainService.lockBlockchain(blockchainService.getBlockchain(),AccessType.WRITE,()->{
+                            blockchainService.recordOperation(rc);
+                        });
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+                    System.out.println("Refund failed: Account is blocked");
+                    return;
+                }
+                // Effectuer le remboursement
+                Credit credit = new Credit(account, rc.getAmount(), "Refund Debit (" + rc.getDescription() + ")");
+                credit.setStatus(TransactionStatus.SUCCESS);
+                rc.setStatus(TransactionStatus.SUCCESS);
+                // Enregistrer les opérations dans la blockchain
+                try {
+                    blockchainService.lockBlockchain(blockchainService.getBlockchain(),AccessType.WRITE,()->{
+                       blockchainService.recordOperation(rc);
+                        blockchainService.recordOperation(credit);
+                    });
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+
+
+                System.out.println("Refund successful: " + rc.getAmount() + " refunded to account " + account.getAccountId());
+            });
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
 
-            // Effectuer le remboursement
-        Debit debit = new Debit(account, rc.getAmount(), "Refund Credit (" + rc.getDescription() + ")");
-        debit.setStatus(TransactionStatus.SUCCESS);
-        // Enregistrer les opérations dans la blockchain
-        blockchainService.recordOperation(rc);
-        blockchainService.recordOperation(debit);
 
     }
 }
