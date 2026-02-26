@@ -84,6 +84,11 @@ public class BlockchainServiceImpl implements BlockchainService {
                         blockchain.getLock().readLock().unlock();
                     }
                 }
+            }else{
+
+                System.out.println("==================================");
+                System.out.println("Current Blockchain "+blockchain.toString()+" is blocked");
+                System.out.println("==================================");
             }
 
             if (!acquired) {

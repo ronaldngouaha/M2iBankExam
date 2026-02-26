@@ -58,7 +58,7 @@ public class Main
             );
 
         }
-        for(int i=0;i<8;i++){
+        for(int i=0;i<5;i++){
             int finalI = i;
             executorService.submit(
                     //Soumet une tâche à exécuter par un thread du pool. La tâche est définie comme une expression lambda qui affiche un message indiquant quelle tâche est exécutée et par quel thread.
@@ -73,19 +73,22 @@ public class Main
 
         ScheduledExecutorService service= Executors.newScheduledThreadPool(1);
 
-        service.scheduleWithFixedDelay(()->{
+     /*   service.scheduleWithFixedDelay(()->{
             System.out.println("==========================================================================");
             blockchainService.getBlockchain().getBlocks()
                     .stream().forEach(System.out::println);
-        },1, 1, TimeUnit.SECONDS);
+        },1, 1, TimeUnit.SECONDS);*/
 
         service.scheduleWithFixedDelay(()->{
             System.out.println("==========================================================================");
             System.out.println("BALANCE OF "+account.getClient().getClientName()+" is "+blockchainService.computeBalance(account));
+            System.out.println("Account status is look? "+account.getLock().isLocked());
+            System.out.println("Blockchain status is WriteLook? "+blockchainService.getBlockchain().getLock().isWriteLocked());
+
         },1, 1, TimeUnit.SECONDS);
 
-        service.schedule(executorService::shutdown,10, TimeUnit.SECONDS);
-        service.schedule(service::shutdown,10, TimeUnit.SECONDS);
+        service.schedule(executorService::shutdown,20, TimeUnit.SECONDS);
+        service.schedule(service::shutdown,20, TimeUnit.SECONDS);
 
 
     }

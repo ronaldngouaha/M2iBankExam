@@ -38,12 +38,21 @@ public class AccountValidationServiceImpl implements AccountValidationService {
                         } finally {
                             acc2.getLock().unlock();
                         }
+                    }else{
+                        System.out.println("==================================");
+                        System.out.println("Current account "+acc2.getAccountNumber()+" is blocked");
+                        System.out.println("==================================");
                     }
                 } finally {
                     if (!acquired) {
                         acc1.getLock().unlock();
                     }
                 }
+            }else{
+
+                System.out.println("==================================");
+                System.out.println("Current account "+acc1.getAccountNumber()+" is blocked");
+                System.out.println("==================================");
             }
             if (!acquired) Thread.sleep(1);
         }
@@ -63,6 +72,11 @@ public class AccountValidationServiceImpl implements AccountValidationService {
                 }finally {
                     account.getLock().unlock();
                 }
+            }else{
+
+                System.out.println("==================================");
+                System.out.println("Current account "+account.getAccountNumber()+" is blocked");
+                System.out.println("==================================");
             }
             if (!acquired) Thread.sleep(1);
         }
