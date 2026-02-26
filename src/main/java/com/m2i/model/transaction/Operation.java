@@ -79,6 +79,8 @@ public sealed abstract class Operation extends BaseTransactionModel permits Debi
     }
 
         public void displayOperationDetails() {
+            System.out.println();
+            System.out.println("----------------------------------------------------------");
             System.out.println("Operation ID: " + operationId);
             System.out.println("Client: " + account.getClient().getClientName());
             System.out.println("Amount: " + amount);

@@ -17,7 +17,7 @@ import java.util.concurrent.*;
  */
 public class Main 
 {
-     static void main( String[] args ) throws InterruptedException {
+     static void main( String[] args )  {
 
 
         Address address = new Address("asd","wew",City.NEW_YORK,Country.CANADA,20);
@@ -32,10 +32,7 @@ public class Main
         DebitServiceImpl debitService = new DebitServiceImpl(blockchainService, validationService);
 
         Credit credit = new Credit(account, BigDecimal.valueOf(2000.20), "Appro compte");
-
         creditService.doOperation(credit);
-
-
 
         ExecutorService executorService= Executors.newFixedThreadPool(4);
 
