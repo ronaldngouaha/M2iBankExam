@@ -2,14 +2,13 @@ package com.m2i.model.transaction;
 
 import com.m2i.model.account.Account;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Statement {
-        private Account account;
-        private LocalDateTime statementStartDate;
-        private LocalDateTime statementEndDate;
-        private Integer maxEntry;
+        private final Account account;
+        private final LocalDateTime statementStartDate;
+        private final LocalDateTime statementEndDate;
+        private final Integer maxEntry;
 
 
         public Statement(Account account, LocalDateTime statementStartDate, LocalDateTime statementEndDate, Integer maxEntry) {

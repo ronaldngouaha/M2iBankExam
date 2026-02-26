@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class MiniStatementServiceImpl implements MiniStatementService {
 
-    private BlockchainServiceImpl blockchainService;
+    private final BlockchainServiceImpl blockchainService;
     public MiniStatementServiceImpl (BlockchainServiceImpl blockchainService) {
         this.blockchainService = blockchainService;
     }
