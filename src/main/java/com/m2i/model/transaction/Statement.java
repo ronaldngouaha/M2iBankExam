@@ -6,19 +6,21 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Statement {
-        private Account accountNumber;
+        private Account account;
         private LocalDateTime statementStartDate;
         private LocalDateTime statementEndDate;
+        private Integer maxEntry;
 
 
-        public Statement(Account accountNumber, LocalDateTime statementStartDate, LocalDateTime statementEndDate) {
-            this.accountNumber = accountNumber;
+        public Statement(Account account, LocalDateTime statementStartDate, LocalDateTime statementEndDate, Integer maxEntry) {
+            this.account = account;
             this.statementEndDate = statementEndDate;
             this.statementStartDate = statementStartDate;
+            this.maxEntry= maxEntry;
         }
 
-        public Account getAccountNumber() {
-            return accountNumber;
+        public Account getAccount() {
+            return account;
         }
 
         public LocalDateTime getStatementStartDate() {
@@ -28,4 +30,8 @@ public class Statement {
         public LocalDateTime getStatementEndDate() {
             return statementEndDate;
         }
+
+    public Integer getMaxEntry() {
+        return maxEntry;
+    }
 }

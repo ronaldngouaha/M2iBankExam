@@ -4,16 +4,11 @@ import com.m2i.model.account.Account;
 import com.m2i.model.account.AccountStatus;
 import com.m2i.model.account.AccountType;
 import com.m2i.model.client.*;
-import com.m2i.model.transaction.Block;
-import com.m2i.model.transaction.Blockchain;
-import com.m2i.model.transaction.Credit;
-import com.m2i.model.transaction.Debit;
-import com.m2i.utils.AccountValidationServiceImpl;
-import com.m2i.utils.BlockchainServiceImpl;
-import com.m2i.utils.CreditServiceImpl;
-import com.m2i.utils.DebitServiceImpl;
+import com.m2i.model.transaction.*;
+import com.m2i.utils.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.concurrent.*;
 
 /**
@@ -84,11 +79,39 @@ public class Main
             System.out.println("BALANCE OF "+account.getClient().getClientName()+" is "+blockchainService.computeBalance(account));
             System.out.println("Account status is look? "+account.getLock().isLocked());
             System.out.println("Blockchain status is WriteLook? "+blockchainService.getBlockchain().getLock().isWriteLocked());
+            System.out.println("==========================================================================");
 
         },1, 1, TimeUnit.SECONDS);
 
-        service.schedule(executorService::shutdown,20, TimeUnit.SECONDS);
-        service.schedule(service::shutdown,20, TimeUnit.SECONDS);
+        MiniStatement miniStatement= new MiniStatement(account,2);
+        MiniStatementServiceImpl miniStatementService= new MiniStatementServiceImpl(blockchainService);
+
+        Statement statement= new Statement(account, LocalDateTime.now().minusMinutes(10), LocalDateTime.now().plusMinutes(20),1000);
+        StatementServiceImpl statementService= new StatementServiceImpl(blockchainService);
+
+        service.schedule(()->{
+            System.out.println();
+            System.out.println("==========================================================================");
+            System.out.println("Mini Statement  of "+account.getAccountNumber());
+            System.out.println("==========================================================================");
+            miniStatementService.doOperation(miniStatement).forEach(Operation::displayOperationDetails);
+            System.out.println("==========================================================================");
+
+        }, 8, TimeUnit.SECONDS);
+
+        service.schedule(()->{
+            System.out.println();
+            System.out.println("==========================================================================");
+            System.out.println("Statement  of "+account.getAccountNumber());
+            System.out.println("==========================================================================");
+            statementService.doOperation(statement).forEach(Operation::displayOperationDetails);
+            System.out.println("==========================================================================");
+
+        }, 8, TimeUnit.SECONDS);
+
+
+        service.schedule(executorService::shutdown,10, TimeUnit.SECONDS);
+        service.schedule(service::shutdown,10, TimeUnit.SECONDS);
 
 
     }
