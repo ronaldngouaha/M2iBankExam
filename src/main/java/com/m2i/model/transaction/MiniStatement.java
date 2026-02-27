@@ -4,7 +4,6 @@ import com.m2i.model.account.Account;
 
 public non-sealed class MiniStatement  <T extends Account> extends  NonFinancialOperation {
 
-    protected Integer numberOfTransactions;
 
 
     public MiniStatement (T account, Integer numberOfTransactions  ) {
@@ -15,8 +14,5 @@ public non-sealed class MiniStatement  <T extends Account> extends  NonFinancial
 
 
 
-    public Integer getNumberOfTransactions() {
-        return numberOfTransactions;
-    }
 
 }

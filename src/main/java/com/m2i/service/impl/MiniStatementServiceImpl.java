@@ -4,13 +4,10 @@ import com.m2i.model.account.Account;
 import com.m2i.model.transaction.MiniStatement;
 import com.m2i.model.transaction.Operation;
 import com.m2i.service.MiniStatementService;
-
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
-public class MiniStatementServiceImpl implements MiniStatementService {
+public class MiniStatementServiceImpl implements MiniStatementService  {
 
 
     private final BlockchainServiceImpl blockchainService;

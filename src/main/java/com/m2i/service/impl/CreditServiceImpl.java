@@ -2,7 +2,6 @@ package com.m2i.service.impl;
 
 import com.m2i.model.account.Account;
 import com.m2i.model.transaction.Credit;
-import com.m2i.model.transaction.Operation;
 import com.m2i.model.transaction.OperationStatus;
 import com.m2i.service.CreditService;
 import com.m2i.utils.AccessType;
@@ -19,7 +18,7 @@ public class CreditServiceImpl implements CreditService {
 
     }
     @Override
-    public Void doOperation(Operation credit) {
+    public Void doOperation(Credit credit) {
 
         Account account=credit.getAccount();
 

@@ -17,7 +17,7 @@ public class RefundTransferServiceImpl implements RefundService {
     }
 
     @Override
-    public Void doOperation(Operation refund) {
+    public Void doOperation(Refund refund) {
 
         if(! (refund instanceof RefundTransfer rc)){
             throw new IllegalArgumentException("Refund must be of type RefundTransfer");

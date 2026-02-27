@@ -4,9 +4,7 @@ import com.m2i.model.account.Account;
 import com.m2i.model.transaction.Operation;
 import com.m2i.model.transaction.Statement;
 import com.m2i.service.StatementService;
-
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,7 +15,7 @@ public class StatementServiceImpl implements StatementService  {
     public StatementServiceImpl (BlockchainServiceImpl blockchainService, AccountValidationServiceImpl validationService) { this.blockchainService = blockchainService; this.validationService= validationService; }
 
     @Override
-    public List<Operation> doOperation(Operation statement) {
+    public List<Operation> doOperation(Statement statement) {
 
         Account account = statement.getAccount();
 

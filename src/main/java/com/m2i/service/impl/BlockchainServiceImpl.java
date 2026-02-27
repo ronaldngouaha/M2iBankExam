@@ -5,12 +5,9 @@ import com.m2i.model.transaction.*;
 import com.m2i.service.BlockchainService;
 import com.m2i.utils.AccessType;
 
-import java.math.BigDecimal;
-import java.util.Comparator;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Collectors;
 
 public class BlockchainServiceImpl implements BlockchainService {
 
@@ -24,7 +21,7 @@ public class BlockchainServiceImpl implements BlockchainService {
 
     @Override
     public List<Operation> getOperationsForAccount(Account account) {
-        if (account == null) return new CopyOnWriteArrayList<>();
+        if (account == null) return new ArrayList<>();
 
         List<Operation> list = blockchain.getBlocks().stream()
                 .map(Block::getOperation)

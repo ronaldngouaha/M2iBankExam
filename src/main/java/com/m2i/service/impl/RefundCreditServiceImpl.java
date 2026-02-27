@@ -1,7 +1,6 @@
 package com.m2i.service.impl;
 
 import com.m2i.model.account.Account;
-
 import com.m2i.model.transaction.*;
 import com.m2i.service.RefundService;
 import com.m2i.utils.AccessType;
@@ -19,7 +18,7 @@ public class RefundCreditServiceImpl implements RefundService {
     }
 
     @Override
-    public Void doOperation(Operation refund) {
+    public Void doOperation(Refund refund) {
 
         if(! (refund instanceof RefundCredit rc)){
             throw new IllegalArgumentException("Refund must be of type RefundCredit");

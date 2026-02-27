@@ -5,6 +5,6 @@ import com.m2i.model.transaction.Operation;
 
 import java.util.List;
 
-public interface MiniStatementService {
-    List<Operation> doOperation(MiniStatement  miniStatement);
+public interface MiniStatementService extends OperationService <MiniStatement, List<Operation>> {
+
 }

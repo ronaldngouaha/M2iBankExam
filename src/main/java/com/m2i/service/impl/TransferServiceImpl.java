@@ -15,7 +15,7 @@ public class TransferServiceImpl implements TransferService {
     }
 
     @Override
-    public Void doOperation(Operation transfer) {
+    public Void doOperation(Transfer transfer) {
         Account sender= transfer.getAccount();
         Account receiver = transfer.getReceiver();
 

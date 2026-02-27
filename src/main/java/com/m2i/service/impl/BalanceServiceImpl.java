@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
-public class BalanceServiceImpl implements BalanceService {
+public class BalanceServiceImpl  implements BalanceService  {
 
     private final BlockchainServiceImpl blockchainService;
     private final AccountValidationServiceImpl validationService;
@@ -22,7 +22,7 @@ public class BalanceServiceImpl implements BalanceService {
     }
 
     @Override
-    public BigDecimal doOperation(Operation balance) {
+    public BigDecimal doOperation(Balance balance) {
 
         Account account = balance.getAccount();
 

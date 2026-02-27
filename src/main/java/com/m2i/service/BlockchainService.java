@@ -6,7 +6,6 @@ import com.m2i.model.transaction.Blockchain;
 import com.m2i.model.transaction.Operation;
 import com.m2i.utils.AccessType;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public interface BlockchainService {

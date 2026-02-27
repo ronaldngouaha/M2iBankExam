@@ -3,7 +3,6 @@ package com.m2i.service.impl;
 import com.m2i.model.account.Account;
 import com.m2i.model.transaction.Balance;
 import com.m2i.model.transaction.Debit;
-import com.m2i.model.transaction.Operation;
 import com.m2i.model.transaction.OperationStatus;
 import com.m2i.service.DebitService;
 import com.m2i.utils.AccessType;
@@ -21,7 +20,7 @@ public class DebitServiceImpl implements DebitService {
     }
 
     @Override
-    public Void doOperation(Operation debit) {
+    public Void doOperation(Debit debit) {
 
         Account account= debit.getAccount();
 

@@ -27,6 +27,8 @@ public sealed abstract class Operation <T extends Account> extends BaseTransacti
     private  LocalDateTime statementEndDate;
     private  Integer maxEntry;
 
+    protected Integer numberOfTransactions;
+
     public Operation(T account, OperationType type, LocalDateTime statementStartDate, LocalDateTime statementEndDate, Integer maxEntry) {
 
         if(statementEndDate.isBefore(statementStartDate)){
@@ -92,6 +94,9 @@ public sealed abstract class Operation <T extends Account> extends BaseTransacti
         return receiver;
     }
 
+    public Integer getNumberOfTransactions() {
+        return numberOfTransactions;
+    }
 
     public String getOperationId() {
         return operationId;

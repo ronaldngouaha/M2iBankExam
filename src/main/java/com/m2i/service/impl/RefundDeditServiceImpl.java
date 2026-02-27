@@ -18,7 +18,7 @@ public class RefundDeditServiceImpl implements RefundService {
 
 
     @Override
-    public Void doOperation(Operation refund) {
+    public Void doOperation(Refund refund) {
 
         if(! (refund instanceof RefundDebit rc)){
             throw new IllegalArgumentException("Refund must be of type RefundDebit");
