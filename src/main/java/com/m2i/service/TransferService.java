@@ -5,8 +5,7 @@ import com.m2i.model.transaction.Transfer;
 
 import java.util.List;
 
-public interface TransferService {
+public interface TransferService  extends OperationService{
 
-    void doOperation(Transfer transfer);
 
 }

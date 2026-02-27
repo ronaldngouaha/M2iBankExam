@@ -1,20 +1,17 @@
-package com.m2i.utils;
+package com.m2i.service.impl;
 
 import com.m2i.model.account.Account;
 import com.m2i.model.transaction.Credit;
 import com.m2i.model.transaction.Operation;
-import com.m2i.model.transaction.TransactionStatus;
-import com.m2i.service.BlockchainService;
+import com.m2i.model.transaction.OperationStatus;
 import com.m2i.service.CreditService;
-
-import java.math.BigDecimal;
-import java.util.List;
+import com.m2i.utils.AccessType;
 
 public class CreditServiceImpl implements CreditService {
 
 
-    private BlockchainServiceImpl blockchainService;
-    private AccountValidationServiceImpl validationService;
+    private final BlockchainServiceImpl blockchainService;
+    private final AccountValidationServiceImpl validationService;
 
     public CreditServiceImpl (BlockchainServiceImpl blockchainService, AccountValidationServiceImpl validationService) {
         this.blockchainService = blockchainService;
@@ -22,7 +19,7 @@ public class CreditServiceImpl implements CreditService {
 
     }
     @Override
-    public void doOperation(Credit credit) {
+    public Void doOperation(Operation credit) {
 
         Account account=credit.getAccount();
 
@@ -33,10 +30,10 @@ public class CreditServiceImpl implements CreditService {
 
                         // Validate account status
                         if (!validationService.canOperate(account)) {
-                            credit.setStatus(TransactionStatus.FAILED);
+                            credit.setStatus(OperationStatus.FAILED);
                             credit.setDescription("Account is blocked");
                             try {
-                                blockchainService.lockBlockchain(blockchainService.getBlockchain(),AccessType.WRITE,()->{
+                                blockchainService.lockBlockchain(blockchainService.getBlockchain(), AccessType.WRITE,()->{
                                     blockchainService.recordOperation(credit);
                                 });
                             } catch (InterruptedException e) {
@@ -47,8 +44,8 @@ public class CreditServiceImpl implements CreditService {
                             return;
                         }
 
-                        credit.setStatus(TransactionStatus.SUCCESS);
-                        // Record the operation in the blockchain
+                credit.setStatus(OperationStatus.SUCCESS);
+                        // Record the credit in the blockchain
                                 try {
                                     blockchainService.lockBlockchain(blockchainService.getBlockchain(),AccessType.WRITE,()->{
                                         blockchainService.recordOperation(credit);
@@ -64,6 +61,10 @@ public class CreditServiceImpl implements CreditService {
                     Thread.currentThread().interrupt();
                 }
 
+        return null;
 
     }
+
+
+
 }

@@ -1,4 +1,4 @@
-package com.m2i.utils;
+package com.m2i.service.impl;
 
 import com.m2i.model.account.Account;
 import com.m2i.model.account.AccountStatus;

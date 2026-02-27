@@ -5,8 +5,6 @@ import com.m2i.model.transaction.Operation;
 
 import java.util.List;
 
-public interface DebitService {
-    void doOperation(Debit debit);
-
+public interface DebitService extends OperationService {
 
 }

@@ -1,4 +1,4 @@
-package com.m2i.utils;
+package com.m2i.service.impl;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;

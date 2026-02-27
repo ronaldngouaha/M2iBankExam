@@ -2,16 +2,11 @@ package com.m2i.model.transaction;
 
 import com.m2i.model.account.Account;
 
-import java.util.List;
 
-public class Balance {
+public non-sealed class Balance <T extends Account> extends NonFinancialOperation  {
 
-    protected List<Block> blockchainBlocks;
-    protected Account account;
+    public Balance (T account , String description) {
+            super(account, OperationType.BALANCE, description);
+        }
 
-    public Balance(Account account, List<Block> blockchainBlocks) {
-        this.account = account;
-        this.blockchainBlocks = blockchainBlocks;
     }
-
-}

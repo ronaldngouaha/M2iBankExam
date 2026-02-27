@@ -1,7 +1,6 @@
 package com.m2i.model.transaction;
 
-import com.m2i.model.transaction.Operation;
-import com.m2i.utils.MultiThreadedMiner;
+import com.m2i.service.impl.MultiThreadedMiner;
 
 public class Block {
 
@@ -15,12 +14,11 @@ public class Block {
     public Block(Operation operation, String previousHash)  throws InterruptedException{
         this.operation = operation;
         this.previousHash = previousHash;
-
         MultiThreadedMiner miner = new MultiThreadedMiner(DIFFICULTY, MAX_POOL);
         MultiThreadedMiner.MiningResult result= miner.mine(buildData());
-
         this.hash = result.hash;
         this.nonce = result.nonce;
+
 
     }
 

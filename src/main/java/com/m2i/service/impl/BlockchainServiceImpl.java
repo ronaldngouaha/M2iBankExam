@@ -1,15 +1,15 @@
-package com.m2i.utils;
+package com.m2i.service.impl;
 
 import com.m2i.model.account.Account;
-import com.m2i.model.account.AccountType;
 import com.m2i.model.transaction.*;
 import com.m2i.service.BlockchainService;
+import com.m2i.utils.AccessType;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 public class BlockchainServiceImpl implements BlockchainService {
@@ -24,20 +24,22 @@ public class BlockchainServiceImpl implements BlockchainService {
 
     @Override
     public List<Operation> getOperationsForAccount(Account account) {
+        if (account == null) return new CopyOnWriteArrayList<>();
 
-            return blockchain.getBlocks().stream()
-                    .map(Block::getOperation)
-                    .filter(Objects::nonNull)
-                    .filter(operation -> operation.getAccount()!=null && operation.getAccount().equals(account))
+        List<Operation> list = blockchain.getBlocks().stream()
+                .map(Block::getOperation)
+                .filter(Objects::nonNull)
+                .filter(op -> account.equals(op.getAccount()))
 
-                    .collect(Collectors.toList());
-
+                .toList();
+        return list;
     }
+
 
     @Override
     public void recordOperation(Operation operation) {
 
-                Block  lastBlock = blockchain.getLastBlock();
+        Block  lastBlock = blockchain.getLastBlock();
         Block newBlock = null;
         try {
             newBlock = new Block(operation, lastBlock != null ? lastBlock.getHash() : "0");
@@ -66,7 +68,6 @@ public class BlockchainServiceImpl implements BlockchainService {
     public void lockBlockchain(Blockchain blockchain, AccessType access, Runnable action) throws InterruptedException {
 
         boolean acquired = false;
-
         while (!acquired) {
 
             boolean locked = (access == AccessType.WRITE)
@@ -77,6 +78,7 @@ public class BlockchainServiceImpl implements BlockchainService {
                 try {
                     acquired = true;
                     action.run();
+
                 } finally {
                     if (access == AccessType.WRITE) {
                         blockchain.getLock().writeLock().unlock();
@@ -99,23 +101,5 @@ public class BlockchainServiceImpl implements BlockchainService {
 
 
 
-    @Override
-    public BigDecimal computeBalance(Account account) {
-
-                    List<Operation> operations = getOperationsForAccount(account);
-                BigDecimal credits= operations.stream()
-                        .filter(op -> op.getType() == TransactionType.CREDIT)
-                        .filter(operation -> operation.getStatus()== TransactionStatus.SUCCESS)
-                        .map(Operation::getAmount)
-                        .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-                BigDecimal debits= operations.stream()
-                        .filter(op -> op.getType() == TransactionType.DEBIT)
-                        .filter(operation -> operation.getStatus()== TransactionStatus.SUCCESS)
-                        .map(Operation::getAmount)
-                        .reduce(BigDecimal.ZERO, BigDecimal::add);
-                return credits.subtract(debits);
-
-    }
 
 }

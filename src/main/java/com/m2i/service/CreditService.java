@@ -5,7 +5,7 @@ import com.m2i.model.transaction.Operation;
 
 import java.util.List;
 
-public interface CreditService {
-    void doOperation(Credit credit);
+public interface CreditService extends OperationService {
+
 
 }

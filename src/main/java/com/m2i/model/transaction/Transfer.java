@@ -2,18 +2,14 @@ package com.m2i.model.transaction;
 import com.m2i.model.account.Account;
 import java.math.BigDecimal;
 
-public final class Transfer extends Operation {
+public non-sealed class Transfer  <T extends Account> extends FinancialOperation {
 
-    private Account receiver;
+    private T receiver;
 
-    public Transfer(Account sender, Account receiver, BigDecimal amount, String description) {
-        super(sender, amount, TransactionType.TRANSFER, description);
-        this.receiver = receiver;
+    public Transfer(T sender, T receiver, BigDecimal amount, String description) {
+        super(sender, receiver, amount, OperationType.TRANSFER, description);
 
     }
 
-    public Account getReceiver() {
-        return receiver;
-    }
 }
 

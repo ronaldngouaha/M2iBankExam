@@ -1,6 +1,6 @@
 package com.m2i.model.transaction;
 
-public enum TransactionType {
+public enum OperationType {
     CREDIT,
     DEBIT,
     TRANSFER,
@@ -8,5 +8,5 @@ public enum TransactionType {
     WITHDRAWAL,
     DEPOSIT,
     REFUND,
-    REWARD, GENESIS, REVERSAL
+    REWARD, GENESIS, BALANCE, MINI_STATEMENT, STATEMENT, REVERSAL
 }

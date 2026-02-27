@@ -1,6 +1,6 @@
 package com.m2i.model.transaction;
 
-public enum TransactionStatus {
+public enum OperationStatus {
     PENDING,
     SUCCESS,
     FAILED,

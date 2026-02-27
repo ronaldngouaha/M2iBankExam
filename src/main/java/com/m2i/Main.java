@@ -5,7 +5,7 @@ import com.m2i.model.account.AccountStatus;
 import com.m2i.model.account.AccountType;
 import com.m2i.model.client.*;
 import com.m2i.model.transaction.*;
-import com.m2i.utils.*;
+import com.m2i.service.impl.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -27,6 +27,8 @@ public class Main
 
         BlockchainServiceImpl blockchainService= new BlockchainServiceImpl(new Blockchain());
         AccountValidationServiceImpl validationService= new AccountValidationServiceImpl();
+
+        BalanceServiceImpl balanceService= new BalanceServiceImpl(blockchainService, validationService);
 
         CreditServiceImpl creditService = new CreditServiceImpl(blockchainService, validationService);
         DebitServiceImpl debitService = new DebitServiceImpl(blockchainService, validationService);
@@ -73,7 +75,7 @@ public class Main
 
         service.scheduleWithFixedDelay(()->{
             System.out.println("==========================================================================");
-            System.out.println("BALANCE OF "+account.getClient().getClientName()+" is "+blockchainService.computeBalance(account));
+            System.out.println("BALANCE OF "+account.getClient().getClientName()+" is "+balanceService.doOperation(new Balance(account,"Balance check")));
             System.out.println("Account status is locked? "+account.getLock().isLocked());
             System.out.println("Blockchain status is WriteLocked? "+blockchainService.getBlockchain().getLock().isWriteLocked());
             System.out.println("==========================================================================");
@@ -81,10 +83,10 @@ public class Main
         },1, 500, TimeUnit.MILLISECONDS);
 
         MiniStatement miniStatement= new MiniStatement(account,2);
-        MiniStatementServiceImpl miniStatementService= new MiniStatementServiceImpl(blockchainService);
+        MiniStatementServiceImpl miniStatementService= new MiniStatementServiceImpl(blockchainService, validationService);
 
         Statement statement= new Statement(account, LocalDateTime.now().minusMinutes(10), LocalDateTime.now().plusMinutes(20),1000);
-        StatementServiceImpl statementService= new StatementServiceImpl(blockchainService);
+        StatementServiceImpl statementService= new StatementServiceImpl(blockchainService, validationService);
 
         service.schedule(()->{
             System.out.println();
@@ -107,8 +109,8 @@ public class Main
         }, 8, TimeUnit.SECONDS);
 
 
-        service.schedule(executorService::shutdown,30, TimeUnit.SECONDS);
-        service.schedule(service::shutdown,30, TimeUnit.SECONDS);
+        service.schedule(executorService::shutdown,10, TimeUnit.SECONDS);
+        service.schedule(service::shutdown,10, TimeUnit.SECONDS);
 
 
     }

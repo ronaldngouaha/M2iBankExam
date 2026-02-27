@@ -5,7 +5,6 @@ import com.m2i.model.transaction.Statement;
 
 import java.util.List;
 
-public interface StatementService {
+public interface StatementService extends OperationService {
 
-    List<Operation> doOperation(Statement statement);
 }

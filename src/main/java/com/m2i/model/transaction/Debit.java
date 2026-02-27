@@ -4,10 +4,10 @@ import com.m2i.model.account.Account;
 
 import java.math.BigDecimal;
 
-public final class Debit extends Operation {
+public non-sealed class Debit  <T extends Account> extends FinancialOperation {
 
-    public Debit (Account client, BigDecimal amount, String description) {
-        super(client, amount, TransactionType.DEBIT, description);
+    public Debit (T account, BigDecimal amount, String description) {
+        super(account, amount, OperationType.DEBIT, description);
     }
 
 }

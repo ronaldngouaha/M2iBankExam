@@ -1,22 +1,23 @@
-package com.m2i.utils;
+package com.m2i.service.impl;
 
 import com.m2i.model.account.Account;
 import com.m2i.model.transaction.*;
 import com.m2i.service.RefundService;
+import com.m2i.utils.AccessType;
 
 import java.math.BigDecimal;
 
 public class RefundTransferServiceImpl implements RefundService {
 
-    private BlockchainServiceImpl blockchainService;
-    private AccountValidationServiceImpl validationService;
+    private final BlockchainServiceImpl blockchainService;
+    private final AccountValidationServiceImpl validationService;
     public RefundTransferServiceImpl(BlockchainServiceImpl blockchainService, AccountValidationServiceImpl validationService) {
         this.blockchainService = blockchainService;
         this.validationService= validationService;
     }
 
     @Override
-    public void doOperation(Refund refund) {
+    public Void doOperation(Operation refund) {
 
         if(! (refund instanceof RefundTransfer rc)){
             throw new IllegalArgumentException("Refund must be of type RefundTransfer");
@@ -31,11 +32,11 @@ public class RefundTransferServiceImpl implements RefundService {
             validationService.lockAccount(receiver, sender, ()->{
 
                 if(!validationService.canOperate(sender) || !validationService.canOperate(receiver)){
-                    rc.setStatus(TransactionStatus.FAILED);
+                    rc.setStatus(OperationStatus.FAILED);
                     rc.setDescription("Account(s) is blocked");
 
                     try {
-                        blockchainService.lockBlockchain(blockchainService.getBlockchain(),AccessType.WRITE,()->{
+                        blockchainService.lockBlockchain(blockchainService.getBlockchain(), AccessType.WRITE,()->{
                             blockchainService.recordOperation(rc);
                         });
                     } catch (InterruptedException e) {
@@ -46,9 +47,11 @@ public class RefundTransferServiceImpl implements RefundService {
                     return;
                 }
 
-                BigDecimal receiverBalance = blockchainService.computeBalance(receiver);
+                BigDecimal receiverBalance = new BalanceServiceImpl(blockchainService, validationService).doOperation(new Balance(receiver, "Check balance for refund transfer"));
+
+
                 if(!validationService.hasSufficientBalance(receiverBalance, rc.getAmount())){
-                    rc.setStatus(TransactionStatus.FAILED);
+                    rc.setStatus(OperationStatus.FAILED);
                     rc.setDescription("Receiver has insufficient balance");
 
                     try {
@@ -64,10 +67,10 @@ public class RefundTransferServiceImpl implements RefundService {
                 }
                 // Effectuer le remboursement
                 Debit debit = new Debit(receiver, rc.getAmount(), "Refund Credit (" + rc.getDescription() + ")");
-                debit.setStatus(TransactionStatus.SUCCESS);
+                debit.setStatus(OperationStatus.SUCCESS);
                 Credit credit = new Credit(sender, rc.getAmount(), "Refund Debit (" + rc.getDescription() + ")");
-                credit.setStatus(TransactionStatus.SUCCESS);
-                rc.setStatus(TransactionStatus.SUCCESS);
+                credit.setStatus(OperationStatus.SUCCESS);
+                rc.setStatus(OperationStatus.SUCCESS);
                 // Enregistrer les opérations dans la blockchain dans le bon ordre pour la tracabilite
                 try {
                     blockchainService.lockBlockchain(blockchainService.getBlockchain(),AccessType.WRITE,()->{
@@ -86,5 +89,6 @@ public class RefundTransferServiceImpl implements RefundService {
             Thread.currentThread().interrupt();
         }
 
+        return null;
     }
 }

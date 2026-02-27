@@ -2,18 +2,18 @@ package com.m2i.model.transaction;
 
 import com.m2i.model.account.Account;
 
-public class MiniStatement {
-    protected Account account;
+public non-sealed class MiniStatement  <T extends Account> extends  NonFinancialOperation {
+
     protected Integer numberOfTransactions;
 
-    public MiniStatement (Account account, Integer numberOfTransactions) {
-        this.account = account;
-        this.numberOfTransactions = numberOfTransactions;
+
+    public MiniStatement (T account, Integer numberOfTransactions  ) {
+        super(account, OperationType.MINI_STATEMENT, "Mini Statement for account: " + account.getAccountNumber()+" with "+numberOfTransactions+" transactions.");
+        this.numberOfTransactions=numberOfTransactions;
+
     }
 
-    public Account getAccount() {
-        return account;
-    }
+
 
     public Integer getNumberOfTransactions() {
         return numberOfTransactions;
