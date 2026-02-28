@@ -1,10 +1,7 @@
 package com.m2i.service.impl;
 
 import com.m2i.model.account.Account;
-import com.m2i.model.transaction.Balance;
-import com.m2i.model.transaction.Operation;
-import com.m2i.model.transaction.OperationStatus;
-import com.m2i.model.transaction.OperationType;
+import com.m2i.model.transaction.*;
 import com.m2i.service.BalanceService;
 
 import java.math.BigDecimal;
@@ -22,15 +19,15 @@ public class BalanceServiceImpl  implements BalanceService  {
     }
 
     @Override
-    public BigDecimal doOperation(Balance balance) {
+    public RequestResponse<BigDecimal> doOperation(Balance balance) {
 
         Account account = balance.getAccount();
 
-        if(!validationService.canOperate(account)){
-            throw new IllegalStateException("Account is not in a valid state for balance computation.");
+        if(!validationService.canOperate(account).getResponseValue()){
+            return new RequestResponse<>(ResponseStatusCode.ACCOUNT_LOCKED, "Account is not valid for balance computation", null);
         }
 
-        List<Operation> operations = blockchainService.getOperationsForAccount(account);
+        List<Operation> operations = blockchainService.getOperationsForAccount(account).responseValue;
         BigDecimal creditTotal =operations
                 .stream()
                 .filter(Objects::nonNull)
@@ -47,7 +44,6 @@ public class BalanceServiceImpl  implements BalanceService  {
 
         blockchainService.recordOperation(balance);
 
-
-        return creditTotal.subtract(debitTotal);
+        return new RequestResponse<>(ResponseStatusCode.SUCCESS, "Balance computed successfully", creditTotal.subtract(debitTotal));
     }
 }

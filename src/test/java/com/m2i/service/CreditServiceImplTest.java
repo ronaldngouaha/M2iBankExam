@@ -31,14 +31,14 @@ public class CreditServiceImplTest {
         customer.setClientStatus(ClientStatus.ACTIVE);
         Account account = new Account(customer, AccountType.CHECKING, AccountStatus.ACTIVE);
 
-        BigDecimal initialBalance = balanceService.doOperation(new Balance(account,"Initial balance"));
+        BigDecimal initialBalance = balanceService.doOperation(new Balance(account,"Initial balance")).getResponseValue();
         Assertions.assertEquals(BigDecimal.valueOf(0), initialBalance);
 
         CreditServiceImpl creditService = new CreditServiceImpl(blockchainService, validationService);
         Credit credit = new Credit(account, BigDecimal.valueOf(2000.20), "Appro compte");
         creditService.doOperation(credit);
 
-        Assertions.assertEquals(BigDecimal.valueOf(2000.20), balanceService.doOperation(new Balance(account,"After credit")));
+        Assertions.assertEquals(BigDecimal.valueOf(2000.20), balanceService.doOperation(new Balance(account,"After credit")).getResponseValue());
 
 
     }

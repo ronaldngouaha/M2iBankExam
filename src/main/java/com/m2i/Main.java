@@ -77,7 +77,7 @@ public class Main
             System.out.println("==========================================================================");
             System.out.println("BALANCE OF "+account.getClient().getClientName()+" is "+balanceService.doOperation(new Balance(account,"Balance check")));
             System.out.println("Account status is locked? "+account.getLock().isLocked());
-            System.out.println("Blockchain status is WriteLocked? "+blockchainService.getBlockchain().getLock().isWriteLocked());
+            System.out.println("Blockchain status is WriteLocked? "+blockchainService.getBlockchain().getResponseValue().getLock().isWriteLocked());
             System.out.println("==========================================================================");
 
         },1, 500, TimeUnit.MILLISECONDS);
@@ -93,7 +93,7 @@ public class Main
             System.out.println("==========================================================================");
             System.out.println("Mini Statement  of "+account.getAccountNumber());
             System.out.println("==========================================================================");
-            miniStatementService.doOperation(miniStatement).forEach(Operation::displayOperationDetails);
+            miniStatementService.doOperation(miniStatement).getResponseValue().forEach(Operation::displayOperationDetails);
             System.out.println("==========================================================================");
 
         }, 8, TimeUnit.SECONDS);
@@ -103,7 +103,7 @@ public class Main
             System.out.println("==========================================================================");
             System.out.println("Statement  of "+account.getAccountNumber());
             System.out.println("==========================================================================");
-            statementService.doOperation(statement).forEach(Operation::displayOperationDetails);
+            statementService.doOperation(statement).getResponseValue().forEach(Operation::displayOperationDetails);
             System.out.println("==========================================================================");
 
         }, 8, TimeUnit.SECONDS);

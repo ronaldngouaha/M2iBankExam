@@ -3,24 +3,27 @@ package com.m2i.service.impl;
 import com.m2i.model.account.Account;
 import com.m2i.model.account.AccountStatus;
 import com.m2i.model.client.ClientStatus;
+import com.m2i.model.transaction.RequestResponse;
+import com.m2i.model.transaction.ResponseStatusCode;
 import com.m2i.service.AccountValidationService;
 
 import java.math.BigDecimal;
 
 public class AccountValidationServiceImpl implements AccountValidationService {
     @Override
-    public boolean canOperate(Account account) {
+    public RequestResponse<Boolean> canOperate(Account account) {
+        if(account==null) return new RequestResponse<>(ResponseStatusCode.ACCOUNT_NOT_FOUND, "Account cannot be null", false);
         // Dummy implementation for account validation
         // In a real application, this would involve checking the account against a database or external service
-        return account.getAccountStatus()== AccountStatus.ACTIVE && account.getClient().getClientStatus()== ClientStatus.ACTIVE;
+        return new RequestResponse<>(ResponseStatusCode.ACCEPTED, "Account is not active or client is not active", account.getAccountStatus() == AccountStatus.ACTIVE && account.getClient().getClientStatus() == ClientStatus.ACTIVE);
     }
 
 
     @Override
-    public boolean hasSufficientBalance(BigDecimal balance, BigDecimal amount) {
+    public RequestResponse<Boolean>  hasSufficientBalance(BigDecimal balance, BigDecimal amount) {
         // Dummy implementation for sufficient funds validation
         // In a real application, this would involve checking the account balance against the amount
-        return balance.compareTo(amount)>=0; // Assume any amount less than 10,000 is valid for simplicity
+        return new RequestResponse<>(ResponseStatusCode.ACCEPTED, "Checking Balance Completed", balance.compareTo(amount) >= 0); // Assume any amount less than 10,000 is valid for simplicity
     }
 
     @Override

@@ -2,6 +2,8 @@ package com.m2i.service.impl;
 
 import com.m2i.model.account.Account;
 import com.m2i.model.transaction.Operation;
+import com.m2i.model.transaction.RequestResponse;
+import com.m2i.model.transaction.ResponseStatusCode;
 import com.m2i.model.transaction.Statement;
 import com.m2i.service.StatementService;
 import java.time.LocalDateTime;
@@ -15,11 +17,11 @@ public class StatementServiceImpl implements StatementService  {
     public StatementServiceImpl (BlockchainServiceImpl blockchainService, AccountValidationServiceImpl validationService) { this.blockchainService = blockchainService; this.validationService= validationService; }
 
     @Override
-    public List<Operation> doOperation(Statement statement) {
+    public RequestResponse<List<Operation>> doOperation(Statement statement) {
 
         Account account = statement.getAccount();
 
-        if(!validationService.canOperate(account)){
+        if(!validationService.canOperate(account).getResponseValue()){
             throw new IllegalStateException("Account is not in a valid state for balance computation.");
         }
 
@@ -29,17 +31,20 @@ public class StatementServiceImpl implements StatementService  {
 
         blockchainService.recordOperation(statement);
 
-        return blockchainService.getOperationsForAccount(statement.getAccount())
-                .stream()
-                .filter(Objects::nonNull)
-                .filter(op -> {
-                    LocalDateTime date = op.getTransactionDate();
-                    return (date.isEqual(start) || date.isAfter(start)) &&
-                            (date.isEqual(end)   || date.isBefore(end));
-                })
-                .sorted((op1, op2) -> op2.getTransactionDate().compareTo(op1.getTransactionDate())) // tri décroissant
-                .limit(max)
-                .toList();
+        return new RequestResponse<>(
+                 ResponseStatusCode.SUCCESS, "Statement generated successfully",
+                blockchainService.getOperationsForAccount(statement.getAccount()).getResponseValue()
+                        .stream()
+                        .filter(Objects::nonNull)
+                        .filter(op -> {
+                            LocalDateTime date = op.getTransactionDate();
+                            return (date.isEqual(start) || date.isAfter(start)) &&
+                                    (date.isEqual(end)   || date.isBefore(end));
+                        })
+                        .sorted((op1, op2) -> op2.getTransactionDate().compareTo(op1.getTransactionDate())) // tri décroissant
+                        .limit(max)
+                        .toList()
+        );
     }
 
 }

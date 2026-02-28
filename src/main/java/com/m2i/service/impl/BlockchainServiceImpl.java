@@ -20,8 +20,8 @@ public class BlockchainServiceImpl implements BlockchainService {
     }
 
     @Override
-    public List<Operation> getOperationsForAccount(Account account) {
-        if (account == null) return new ArrayList<>();
+    public  RequestResponse <List <Operation>>  getOperationsForAccount(Account account) {
+        if (account == null) return new RequestResponse<>(ResponseStatusCode.ACCOUNT_NOT_FOUND, "Account cannot be null", new ArrayList<>());
 
         List<Operation> list = blockchain.getBlocks().stream()
                 .map(Block::getOperation)
@@ -29,12 +29,12 @@ public class BlockchainServiceImpl implements BlockchainService {
                 .filter(op -> account.equals(op.getAccount()))
 
                 .toList();
-        return list;
+        return new RequestResponse<>(ResponseStatusCode.SUCCESS, "Operations retrieved successfully", list);
     }
 
 
     @Override
-    public void recordOperation(Operation operation) {
+    public RequestResponse<Operation> recordOperation(Operation operation) {
 
         Block  lastBlock = blockchain.getLastBlock();
         Block newBlock = null;
@@ -42,22 +42,24 @@ public class BlockchainServiceImpl implements BlockchainService {
             newBlock = new Block(operation, lastBlock != null ? lastBlock.getHash() : "0");
         } catch (InterruptedException e) {
         Thread.currentThread().interrupt();
+            return new RequestResponse<>(ResponseStatusCode.INTERNAL_SERVER_ERROR, "Failed to record operation due to interruption", operation);
         }
         blockchain.addBlock(newBlock);
 
+        return new RequestResponse<>(ResponseStatusCode.SUCCESS, "Operation recorded successfully", operation);
 
     }
 
     @Override
-    public Blockchain getBlockchain() {
+    public RequestResponse<Blockchain>   getBlockchain() {
 
-        return blockchain;
+        return new RequestResponse<>(ResponseStatusCode.SUCCESS, "Blockchain retrieved successfully", blockchain);
 
     }
     @Override
-    public List<Block> getAllBlocks() {
+    public RequestResponse<List<Block>> getAllBlocks() {
 
-        return blockchain.getBlocks();
+        return new RequestResponse<>(ResponseStatusCode.SUCCESS, "Blocks retrieved successfully", blockchain.getBlocks());
 
     }
 

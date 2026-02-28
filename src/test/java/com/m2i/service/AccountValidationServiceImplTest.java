@@ -18,16 +18,16 @@ public class AccountValidationServiceImplTest {
         Customer customer= new Customer("johs","sfd","+5145467223","john@gmail.com",address);
 
         Account account = new Account(customer, AccountType.CHECKING);
-        assertFalse( accountValidationService.canOperate(account));
+        assertFalse( accountValidationService.canOperate(account).getResponseValue());
 
         customer.setClientStatus(ClientStatus.ACTIVE);
         // account est toujours INACTIVE
-        assertFalse( accountValidationService.canOperate(account));
+        assertFalse( accountValidationService.canOperate(account).getResponseValue());
 
         account.setAccountStatus(AccountStatus.ACTIVE);
         customer.setClientStatus(ClientStatus.ACTIVE);
         // account est ACTIVE et client est ACTIVE
-        assertTrue(accountValidationService.canOperate(account));
+        assertTrue(accountValidationService.canOperate(account).getResponseValue());
 
     }
 }
