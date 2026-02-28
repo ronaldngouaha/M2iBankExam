@@ -15,6 +15,14 @@ public class MultiThreadedMiner {
         this.threadCount = threadCount;
     }
 
+    public int getDifficulty() {
+        return difficulty;
+    }
+
+    public int getThreadCount() {
+        return threadCount;
+    }
+
     private String sha256(String data) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -83,5 +91,15 @@ public class MultiThreadedMiner {
             this.hash = hash;
             this.nonce = nonce;
         }
+
+        public long getNonce() {
+            return nonce;
+        }
+
+        public String getHash() {
+            return hash;
+        }
     }
+
+
 }

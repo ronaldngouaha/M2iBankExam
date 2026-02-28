@@ -8,4 +8,8 @@ public non-sealed class RefundCredit  <T extends Account> extends Refund {
     public RefundCredit(T account, BigDecimal amount, String description) {
         super(account, amount, description);
     }
+
+    public RefundCredit() {
+        super(null, null, null);
+    }
 }

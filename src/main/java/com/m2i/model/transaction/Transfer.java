@@ -4,12 +4,19 @@ import java.math.BigDecimal;
 
 public non-sealed class Transfer  <T extends Account> extends FinancialOperation {
 
-    private T receiver;
 
     public Transfer(T sender, T receiver, BigDecimal amount, String description) {
         super(sender, receiver, amount, OperationType.TRANSFER, description);
 
     }
 
+    public T getSender() {
+        return (T) super.getAccount();
+    }
+
+    @Override
+    public T getReceiver() {
+        return (T) super.getReceiver();
+    }
 }
 

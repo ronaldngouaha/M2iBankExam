@@ -21,7 +21,7 @@ public class TransferServiceImpl implements TransferService {
 
     @Override
     public RequestResponse<List<Operation>> doOperation(Transfer transfer) {
-        Account sender= transfer.getAccount();
+        Account sender= transfer.getSender();
         Account receiver = transfer.getReceiver();
 
         try {
@@ -45,6 +45,7 @@ public class TransferServiceImpl implements TransferService {
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                         result[0]= new RequestResponse<>(ResponseStatusCode.INTERNAL_SERVER_ERROR, "Transfer failed due to interruption", List.of(transfer));
+
                     }
                     System.out.println("Transfer failed: Account is blocked");
                     return;

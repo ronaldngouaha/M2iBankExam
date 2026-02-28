@@ -40,7 +40,6 @@ public class RefundCreditServiceImpl implements RefundCreditService {
                             refund.setDescription("Account is blocked");
                             blockchainService.recordOperation(refund);
                             result[0] = new RequestResponse<>(ResponseStatusCode.ACCOUNT_LOCKED, "Account is blocked. Refund operation failed.", List.of(refund));
-
                             System.out.println("Account is blocked. Refund operation failed.");
                         });
                     } catch (InterruptedException e) {
@@ -53,20 +52,17 @@ public class RefundCreditServiceImpl implements RefundCreditService {
                 BigDecimal balance = balanceService.doOperation(new Balance(account, "Check balance for refund credit")).getResponseValue();
 
                 if (!validationService.hasSufficientBalance(balance, refund.getAmount()).getResponseValue()) {
-
                     try {
                         blockchainService.lockBlockchain(blockchain,AccessType.WRITE,()->{
                             refund.setStatus(OperationStatus.FAILED);
                             blockchainService.recordOperation(refund);
                             result[0]= new RequestResponse<>(ResponseStatusCode.INSUFFICIENT_FUNDS, "Insufficient balance. Refund operation failed.", List.of(refund));
-
                             System.out.println("Insufficient balance. Refund operation failed.");
                         });
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                         result[0]= new RequestResponse<>(ResponseStatusCode.INTERNAL_SERVER_ERROR, "Refund operation failed due to interruption", List.of(refund));
                     }
-
                     return;
                 }
 
@@ -81,7 +77,6 @@ public class RefundCreditServiceImpl implements RefundCreditService {
                         blockchainService.recordOperation(refund);
                         blockchainService.recordOperation(debit);
                         result[0]= new RequestResponse<>(ResponseStatusCode.SUCCESS, "Refund Credit operation successful.", List.of(refund, debit));
-
                         System.out.println("Refund Credit operation successful.");
                     });
                 } catch (InterruptedException e) {

@@ -23,4 +23,13 @@ public class RequestResponse<T>  {
     public String getResponseMessage() {
         return responseMessage;
     }
+
+
+    public String toString() {
+        return "RequestResponse{" +
+                "statusCode=" + statusCode +
+                ", responseMessage='" + responseMessage + '\'' +
+                ", responseValue=" + responseValue +
+                '}';
+    }
 }
