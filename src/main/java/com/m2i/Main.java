@@ -17,7 +17,7 @@ import java.util.concurrent.*;
  */
 public class Main 
 {
-     static void main( String[] args )  {
+     public static void main( String[] args )  {
 
 
         Address address = new Address("asd","wew",City.NEW_YORK,Country.CANADA,20);

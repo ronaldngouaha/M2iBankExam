@@ -13,10 +13,11 @@ public non-sealed class Statement  <T extends Account> extends NonFinancialOpera
 
     public Statement(T account, LocalDateTime statementStartDate, LocalDateTime statementEndDate, Integer maxEntry) {
 
+        super(account, OperationType.STATEMENT, "Statement for account: " + account.getAccountNumber() + " from " + statementStartDate + " to " + statementEndDate + " with max entries: " + maxEntry);
+
         if(statementEndDate.isBefore(statementStartDate)){
             throw  IllegalParameterArgumentException.forInvalid("statementEndDate", "Statement end date cannot be before start date");
         }
-        super(account, OperationType.STATEMENT, "Statement for account: " + account.getAccountNumber() + " from " + statementStartDate + " to " + statementEndDate + " with max entries: " + maxEntry);
 
         this.statementStartDate = statementStartDate;
         this.statementEndDate = statementEndDate;
