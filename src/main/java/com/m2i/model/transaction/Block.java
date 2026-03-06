@@ -4,14 +4,14 @@ import com.m2i.service.impl.MultiThreadedMiner;
 
 public class Block {
 
-    private final Operation operation;
+    private final FinancialOperation operation;
     private final String previousHash;
     private final String hash;
     private Long nonce;
     private static final int DIFFICULTY= 5;
     private static final int MAX_POOL= 2;
 
-    public Block(Operation operation, String previousHash)  throws InterruptedException{
+    public Block(FinancialOperation operation, String previousHash)  throws InterruptedException{
         this.operation = operation;
         this.previousHash = previousHash;
         MultiThreadedMiner miner = new MultiThreadedMiner(DIFFICULTY, MAX_POOL);
@@ -25,7 +25,7 @@ public class Block {
     public Long getNonce() {
         return nonce;
     }
-    public Operation getOperation() { return operation; }
+    public FinancialOperation getOperation() { return operation; }
     public String getPreviousHash() { return previousHash; }
     public String getHash() { return hash; }
 

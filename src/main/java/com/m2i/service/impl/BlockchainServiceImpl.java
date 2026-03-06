@@ -20,10 +20,10 @@ public class BlockchainServiceImpl implements BlockchainService {
     }
 
     @Override
-    public  RequestResponse <List <Operation>>  getOperationsForAccount(Account account) {
+    public  RequestResponse <List <FinancialOperation>>  getOperationsForAccount(Account account) {
         if (account == null) return new RequestResponse<>(ResponseStatusCode.ACCOUNT_NOT_FOUND, "Account cannot be null", new ArrayList<>());
 
-        List<Operation> list = blockchain.getBlocks().stream()
+        List<FinancialOperation> list = blockchain.getBlocks().stream()
                 .map(Block::getOperation)
                 .filter(Objects::nonNull)
                 .filter(op -> account.equals(op.getAccount()))
@@ -32,9 +32,14 @@ public class BlockchainServiceImpl implements BlockchainService {
         return new RequestResponse<>(ResponseStatusCode.SUCCESS, "Operations retrieved successfully", list);
     }
 
+    @Override
+    public RequestResponse<List<NonFinancialOperation>> getNonFinancialOperationsForAccount(Account account) {
+        return null;
+    }
+
 
     @Override
-    public RequestResponse<Operation> recordOperation(Operation operation) {
+    public RequestResponse<FinancialOperation> recordOperation(FinancialOperation operation) {
 
         Block  lastBlock = blockchain.getLastBlock();
         Block newBlock = null;

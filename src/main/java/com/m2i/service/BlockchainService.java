@@ -1,10 +1,7 @@
 package com.m2i.service;
 
 import com.m2i.model.account.Account;
-import com.m2i.model.transaction.Block;
-import com.m2i.model.transaction.Blockchain;
-import com.m2i.model.transaction.Operation;
-import com.m2i.model.transaction.RequestResponse;
+import com.m2i.model.transaction.*;
 import com.m2i.utils.AccessType;
 
 import java.util.List;
@@ -12,9 +9,11 @@ import java.util.List;
 public interface BlockchainService {
 
     // Permet de récupérer la liste de toutes les opérations associées à un compte donné.
-    RequestResponse<List<Operation>>      getOperationsForAccount(Account account);
+    RequestResponse<List<FinancialOperation>>      getOperationsForAccount(Account account);
      // Permet d'enregistrer une nouvelle opération dans la blockchain.
-     RequestResponse<Operation> recordOperation(Operation operation);
+     RequestResponse<List<NonFinancialOperation>>      getNonFinancialOperationsForAccount(Account account);
+
+     RequestResponse<FinancialOperation> recordOperation(FinancialOperation operation);
         // Permet de récupérer la blockchain complète.
         RequestResponse<Blockchain>   getBlockchain();
      // Permet de récupérer la liste de tous les blocs présents dans la blockchain.

@@ -58,7 +58,7 @@ public class MiniStatementServiceImplTest {
 
         MiniStatementService miniStatementService = new MiniStatementServiceImpl(blockchainService,validationService);
 
-        List<Operation> operations= miniStatementService.doOperation(miniStatement).getResponseValue();
+        List<FinancialOperation> operations= miniStatementService.doOperation(miniStatement).getResponseValue();
         operations.forEach(operation -> {
             System.out.println("Type: " + operation.getType());
             System.out.println("Amount: " + operation.getAmount());

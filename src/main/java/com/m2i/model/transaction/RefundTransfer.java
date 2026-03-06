@@ -8,7 +8,7 @@ public non-sealed class RefundTransfer  <T extends Account> extends Refund {
     private final Account receiver;
 
     public RefundTransfer(T sender, T receiver, BigDecimal amount, String description) {
-        super(sender, amount, description);
+        super(sender, amount, OperationType.REFUND_TRANSFER, description);
         this.receiver = receiver;
     }
 

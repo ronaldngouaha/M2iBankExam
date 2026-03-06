@@ -1,10 +1,7 @@
 package com.m2i.service.impl;
 
 import com.m2i.model.account.Account;
-import com.m2i.model.transaction.Operation;
-import com.m2i.model.transaction.RequestResponse;
-import com.m2i.model.transaction.ResponseStatusCode;
-import com.m2i.model.transaction.Statement;
+import com.m2i.model.transaction.*;
 import com.m2i.service.StatementService;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,7 +14,7 @@ public class StatementServiceImpl implements StatementService  {
     public StatementServiceImpl (BlockchainServiceImpl blockchainService, AccountValidationServiceImpl validationService) { this.blockchainService = blockchainService; this.validationService= validationService; }
 
     @Override
-    public RequestResponse<List<Operation>> doOperation(Statement statement) {
+    public RequestResponse<List<FinancialOperation>> doOperation(Statement statement) {
 
         Account account = statement.getAccount();
 
@@ -28,8 +25,6 @@ public class StatementServiceImpl implements StatementService  {
         LocalDateTime start = statement.getStatementStartDate();
         LocalDateTime end = statement.getStatementEndDate();
         int max = statement.getMaxEntry();
-
-        blockchainService.recordOperation(statement);
 
         return new RequestResponse<>(
                  ResponseStatusCode.SUCCESS, "Statement generated successfully",

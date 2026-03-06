@@ -22,14 +22,14 @@ public class RefundCreditServiceImpl implements RefundCreditService {
     }
 
     @Override
-    public RequestResponse<List<Operation>> doOperation(RefundCredit refund) {
+    public RequestResponse<List<FinancialOperation>> doOperation(RefundCredit refund) {
         
         // Validation de l'opération de remboursement
         Account account= refund.getAccount();
 
         Blockchain blockchain = blockchainService.getBlockchain().getResponseValue();
         try {
-            final RequestResponse <List<Operation>>[] result = new RequestResponse[1];
+            final RequestResponse <List<FinancialOperation>>[] result = new RequestResponse[1];
 
             validationService.lockAccount(account, ()->{
 

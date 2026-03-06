@@ -8,6 +8,9 @@ public non-sealed class Credit  <T extends Account> extends FinancialOperation {
 
     public Credit (T account, BigDecimal amount, String description) {
         super(account, amount, OperationType.CREDIT, description);
+
+
+
     }
 
 }

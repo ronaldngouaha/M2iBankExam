@@ -6,10 +6,11 @@ import java.math.BigDecimal;
 public non-sealed class RefundCredit  <T extends Account> extends Refund {
 
     public RefundCredit(T account, BigDecimal amount, String description) {
-        super(account, amount, description);
+
+
+        super(account, amount,OperationType.REFUND_CREDIT, description);
+
     }
 
-    public RefundCredit() {
-        super(null, null, null);
-    }
+
 }

@@ -6,13 +6,17 @@ import java.math.BigDecimal;
 
 public sealed abstract class FinancialOperation <T extends Account> extends Operation permits Debit, Credit, Transfer,Refund {
 
+    public static final String AMOUNT = "amount";
+    protected   BigDecimal amount;
     public FinancialOperation ( T account, BigDecimal amount, OperationType type, String description) {
-        super(account, amount, type, description);
-    }
+        super(account, type, description);
+         checkAttribute(AMOUNT, amount);
+        this.amount = amount;
 
-    public FinancialOperation ( T sender, T receiver, BigDecimal amount, OperationType type, String description) {
-        super(sender, receiver, amount, type, description);
-    }
 
+   }
+    public BigDecimal getAmount() {
+        return amount;
+    }
 
 }

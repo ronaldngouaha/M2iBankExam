@@ -12,55 +12,13 @@ public sealed abstract class Operation <T extends Account> extends BaseTransacti
     public static final String DESCRIPTION = "description";
     public static final String STATUS = "status";
     public static final String CLIENT = "client";
-    public static final String AMOUNT = "amount";
     public static final String TYPE = "type";
     private final String operationId;
-    protected   BigDecimal amount;
     private final T account;
     private final OperationType type;
     private OperationStatus status;
     private String description;
     private final LocalDateTime transactionDate;
-    private T receiver;
-
-    private  LocalDateTime statementStartDate;
-    private  LocalDateTime statementEndDate;
-    private  Integer maxEntry;
-
-    protected Integer numberOfTransactions;
-
-    public Operation(T account, OperationType type, LocalDateTime statementStartDate, LocalDateTime statementEndDate, Integer maxEntry) {
-
-        if(statementEndDate.isBefore(statementStartDate)){
-            throw  IllegalParameterArgumentException.forInvalid("statementEndDate", "Statement end date cannot be before start date");
-        }
-         this(account, type);
-        this.statementEndDate = statementEndDate;
-        this.statementStartDate = statementStartDate;
-        this.maxEntry= maxEntry;
-    }
-
-
-    public LocalDateTime getStatementStartDate() {
-        return statementStartDate;
-    }
-
-    public LocalDateTime getStatementEndDate() {
-        return statementEndDate;
-    }
-
-    public Integer getMaxEntry() {
-        return maxEntry;
-    }
-
-     public Operation(T account, BigDecimal amount, OperationType type, String description) {
-
-        this(account, type, description);
-        checkAttribute(AMOUNT, amount);
-        this.amount = amount;
-        this.description = description;
-
-    }
 
     public Operation(T account ,OperationType type){
         checkAttribute(CLIENT, account);
@@ -72,11 +30,6 @@ public sealed abstract class Operation <T extends Account> extends BaseTransacti
         this.type = type;
     }
 
-    public Operation(T sender, T receiver, BigDecimal amount, OperationType type, String description) {
-        this(sender, amount, type, description);
-        this.receiver = receiver;
-
-    }
 
     public Operation(T account , OperationType type, String description) {
         this(account, type);
@@ -90,20 +43,9 @@ public sealed abstract class Operation <T extends Account> extends BaseTransacti
         return account;
     }
 
-    public T getReceiver() {
-        return receiver;
-    }
-
-    public Integer getNumberOfTransactions() {
-        return numberOfTransactions;
-    }
 
     public String getOperationId() {
         return operationId;
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
     }
 
     public OperationType getType() {
@@ -142,7 +84,7 @@ public sealed abstract class Operation <T extends Account> extends BaseTransacti
             System.out.println("----------------------------------------------------------");
             System.out.println("Operation ID: " + operationId);
             System.out.println("Client: " + account.getClient().getClientName());
-            System.out.println("Amount: " + amount);
+
             System.out.println("Type: " + type);
             System.out.println("Status: " + status);
             System.out.println("Description: " + description);
@@ -153,7 +95,7 @@ public sealed abstract class Operation <T extends Account> extends BaseTransacti
         public String toString() {
             return "Operation{" +
                     "operationId='" + operationId + '\'' +
-                    ", amount=" + amount +
+
                     ", account=" + account +
                     ", type=" + type +
                     ", status=" + status +

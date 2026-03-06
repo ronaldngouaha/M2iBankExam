@@ -50,7 +50,7 @@ public class RefundTransferServiceImplTest {
 
         // Assert
         TransferService transferService = new TransferServiceImpl(blockchainService, validationService);
-        RequestResponse<List<Operation>> transferResponse = transferService.doOperation(transfer);
+        RequestResponse<List<FinancialOperation>> transferResponse = transferService.doOperation(transfer);
         System.out.println(transferResponse);
         Assertions.assertTrue(ResponseStatusCode.SUCCESS==transferResponse.getStatusCode());
 
@@ -65,7 +65,7 @@ public class RefundTransferServiceImplTest {
 
         RefundTransfer refundTransfer = new RefundTransfer(transfer.getSender(), transfer.getReceiver(), transfer.getAmount(), "Refund transfer to John");
         RefundTransferServiceImpl refundTransferService = new RefundTransferServiceImpl(blockchainService, validationService);
-        RequestResponse<List<Operation>> refundResponse = refundTransferService.doOperation(refundTransfer);
+        RequestResponse<List<FinancialOperation>> refundResponse = refundTransferService.doOperation(refundTransfer);
         System.out.println(refundResponse);
         Assertions.assertTrue(ResponseStatusCode.SUCCESS==refundResponse.getStatusCode());
         BigDecimal johnBalanceAfterRefund = balanceService.doOperation(new Balance(johnAccount,"After refund transfer")).getResponseValue();

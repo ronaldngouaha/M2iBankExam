@@ -27,22 +27,22 @@ public class BalanceServiceImpl  implements BalanceService  {
             return new RequestResponse<>(ResponseStatusCode.ACCOUNT_LOCKED, "Account is not valid for balance computation", null);
         }
 
-        List<Operation> operations = blockchainService.getOperationsForAccount(account).responseValue;
+        List<FinancialOperation> operations = blockchainService.getOperationsForAccount(account).responseValue;
         BigDecimal creditTotal =operations
                 .stream()
                 .filter(Objects::nonNull)
                 .filter(operation ->  operation.getType().equals(OperationType.CREDIT) && operation.getStatus().equals(OperationStatus.SUCCESS))
-                .map(Operation::getAmount)
+                .map(FinancialOperation::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         BigDecimal debitTotal = operations
                 .stream()
                 .filter(Objects::nonNull)
                 .filter(operation -> operation.getType().equals(OperationType.DEBIT) && operation.getStatus().equals(OperationStatus.SUCCESS))
-                .map(Operation::getAmount)
+                .map(FinancialOperation::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        blockchainService.recordOperation(balance);
+
 
         return new RequestResponse<>(ResponseStatusCode.SUCCESS, "Balance computed successfully", creditTotal.subtract(debitTotal));
     }

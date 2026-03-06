@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 
 public sealed abstract class Refund  <T extends Account> extends FinancialOperation permits RefundCredit , RefundDebit, RefundTransfer {
 
-    public Refund (Account account, BigDecimal amount, String description) {
-        super(account, amount, OperationType.REFUND, description);
+    public Refund (Account account, BigDecimal amount, OperationType operationType, String description) {
+        super(account, amount, operationType, description);
     }
 }

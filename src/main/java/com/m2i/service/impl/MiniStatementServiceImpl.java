@@ -1,10 +1,7 @@
 package com.m2i.service.impl;
 
 import com.m2i.model.account.Account;
-import com.m2i.model.transaction.MiniStatement;
-import com.m2i.model.transaction.Operation;
-import com.m2i.model.transaction.RequestResponse;
-import com.m2i.model.transaction.ResponseStatusCode;
+import com.m2i.model.transaction.*;
 import com.m2i.service.MiniStatementService;
 import java.util.List;
 import java.util.Objects;
@@ -20,7 +17,7 @@ public class MiniStatementServiceImpl implements MiniStatementService  {
         this.validationService = validationService;
     }
     @Override
-    public RequestResponse<List<Operation>> doOperation(MiniStatement miniStatement) {
+    public RequestResponse<List<FinancialOperation>> doOperation(MiniStatement miniStatement) {
 
         Account account = miniStatement.getAccount();
 
@@ -29,7 +26,6 @@ public class MiniStatementServiceImpl implements MiniStatementService  {
          //   throw new IllegalStateException("Account is not in a valid state for balance computation.");
         }
 
-        blockchainService.recordOperation(miniStatement);
 
         return new RequestResponse<>(ResponseStatusCode.SUCCESS, "Mini statement retrieved successfully",
                 blockchainService.getOperationsForAccount(miniStatement.getAccount()).getResponseValue()

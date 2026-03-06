@@ -22,8 +22,7 @@ public class RefundTransferServiceImpl implements RefundTransferService {
     }
 
     @Override
-    public RequestResponse<List<Operation>> doOperation(RefundTransfer rc) {
-
+    public RequestResponse<List<FinancialOperation>> doOperation(RefundTransfer rc) {
 
         // Validation de l'opération de remboursement
         Account sender= rc.getAccount();
@@ -32,7 +31,7 @@ public class RefundTransferServiceImpl implements RefundTransferService {
         Blockchain blockchain= blockchainService.getBlockchain().getResponseValue();
 
         try {
-            final RequestResponse <List<Operation>>[] result = new RequestResponse[1];
+            final RequestResponse <List<FinancialOperation>>[] result = new RequestResponse[1];
 
             validationService.lockAccount(receiver, sender, ()->{
 

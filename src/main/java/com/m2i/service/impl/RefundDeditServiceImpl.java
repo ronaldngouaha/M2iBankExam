@@ -23,7 +23,7 @@ public class RefundDeditServiceImpl implements RefundDebitService {
 
 
     @Override
-    public RequestResponse<List<Operation>> doOperation(RefundDebit refund) {
+    public RequestResponse<List<FinancialOperation>> doOperation(RefundDebit refund) {
 
 
 
@@ -33,7 +33,7 @@ public class RefundDeditServiceImpl implements RefundDebitService {
         Blockchain blockchain= blockchainService.getBlockchain().getResponseValue();
 
         try {
-            final RequestResponse <List<Operation>>[] result = new RequestResponse[1];
+            final RequestResponse <List<FinancialOperation>>[] result = new RequestResponse[1];
 
             validationService.lockAccount(account, ()->{
 

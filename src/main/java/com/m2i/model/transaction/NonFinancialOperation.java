@@ -8,10 +8,9 @@ public sealed abstract class NonFinancialOperation <T extends Account> extends O
 
     public NonFinancialOperation (T account , OperationType operationType, String description) {
         super(account,operationType, description);
+
     }
 
-    public NonFinancialOperation(T account, OperationType type, LocalDateTime statementStartDate, LocalDateTime statementEndDate, Integer maxEntry) {
-           super(account, type, statementStartDate, statementEndDate, maxEntry);
-    }
+
 
 }

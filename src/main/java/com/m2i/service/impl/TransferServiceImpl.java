@@ -20,12 +20,12 @@ public class TransferServiceImpl implements TransferService {
     }
 
     @Override
-    public RequestResponse<List<Operation>> doOperation(Transfer transfer) {
+    public RequestResponse<List<FinancialOperation>> doOperation(Transfer transfer) {
         Account sender= transfer.getSender();
         Account receiver = transfer.getReceiver();
 
         try {
-            final RequestResponse <List<Operation>>[] result = new RequestResponse[1];
+            final RequestResponse <List<FinancialOperation>>[] result = new RequestResponse[1];
 
             validationService.lockAccount(sender, receiver, ()->{
 

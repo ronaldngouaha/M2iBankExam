@@ -5,6 +5,7 @@ import com.m2i.model.account.Account;
 public non-sealed class MiniStatement  <T extends Account> extends  NonFinancialOperation {
 
 
+    private Integer numberOfTransactions;
 
     public MiniStatement (T account, Integer numberOfTransactions  ) {
         super(account, OperationType.MINI_STATEMENT, "Mini Statement for account: " + account.getAccountNumber()+" with "+numberOfTransactions+" transactions.");
@@ -12,7 +13,13 @@ public non-sealed class MiniStatement  <T extends Account> extends  NonFinancial
 
     }
 
+  public Integer getNumberOfTransactions() {
+        return numberOfTransactions;
+    }
 
+    public void setNumberOfTransactions(Integer numberOfTransactions) {
+        this.numberOfTransactions = numberOfTransactions;
+    }
 
 
 }

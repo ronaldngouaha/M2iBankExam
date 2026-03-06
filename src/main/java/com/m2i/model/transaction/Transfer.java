@@ -5,18 +5,22 @@ import java.math.BigDecimal;
 public non-sealed class Transfer  <T extends Account> extends FinancialOperation {
 
 
-    public Transfer(T sender, T receiver, BigDecimal amount, String description) {
-        super(sender, receiver, amount, OperationType.TRANSFER, description);
+    private static final String RECEIVER = "RECEIVER";
+    private T receiver;
 
+    public Transfer(T sender, T receiver, BigDecimal amount, String description) {
+        super(sender, amount, OperationType.TRANSFER, description);
+
+        checkAttribute(RECEIVER, receiver);
+        this.receiver = receiver;
     }
 
     public T getSender() {
         return (T) super.getAccount();
     }
 
-    @Override
+
     public T getReceiver() {
-        return (T) super.getReceiver();
+        return receiver;
     }
 }
-
