@@ -65,7 +65,7 @@ public class AccountValidationServiceImpl implements AccountValidationService {
                         }
                     }
                 } finally {
-                    if (!acquired) first.getLock().unlock();
+                    first.getLock().unlock();
                 }
             }
 

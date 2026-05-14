@@ -19,7 +19,7 @@ public class StatementServiceImpl implements StatementService  {
         Account account = statement.getAccount();
 
         if(!validationService.canOperate(account).getResponseValue()){
-            throw new IllegalStateException("Account is not in a valid state for balance computation.");
+            return new RequestResponse<>(ResponseStatusCode.ACCOUNT_LOCKED, "Account is not valid for statement retrieval", null);
         }
 
         LocalDateTime start = statement.getStatementStartDate();
